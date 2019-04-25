@@ -46,8 +46,8 @@
 #define UART3_R_BASE_ADDRESSE		                (0x4000F000)
 #define UART4_R_BASE_ADDRESSE		                (0x40010000)
 #define UART5_R_BASE_ADDRESSE		                (0x40011000)
-#define UART7_R_BASE_ADDRESSE		                (0x40012000)
-#define UART6_R_BASE_ADDRESSE		                (0x40013000)
+#define UART6_R_BASE_ADDRESSE		                (0x40012000)
+#define UART7_R_BASE_ADDRESSE		                (0x40013000)
 
 #define UART_DATA_R_OFFSET											(0x00000000)
 #define UART_FLAG_R_OFFSET											(0x00000018)
