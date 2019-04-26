@@ -41,13 +41,13 @@ typedef unsigned char bool;
 
 
 typedef unsigned char 	uint8_t;
-typedef signed char 	suint8;
-typedef unsigned short 	uint16;
-typedef signed short 	suint16;
+typedef signed char 	suint8_t;
+typedef unsigned short 	uint16_t;
+typedef signed short 	suint16_t;
 typedef unsigned long 	uint32_t;
-typedef signed long 	suint32;
-typedef  float 			float32;
-typedef  double 		float64;
+typedef signed long 	suint32_t;
+typedef  float 			float32_t;
+typedef  double 		float64_t;
 
 
 
