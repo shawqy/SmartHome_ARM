@@ -109,7 +109,7 @@ void ADC_init(const ADC_ConfigureStruct* configStruct_ptr)
    Adc_CurrentBaseAddresse=ADC_BaseAdresse[configStruct_ptr->AN];
 
 	
-  /*Disable The UART to set the settings*/
+  /*Disable The ADC Sequencers to set the settings*/
 	(*((volatile uint32_t*)( Adc_CurrentBaseAddresse + ADC_R_Active_Sequencer_OFFSET )))&=~(configStruct_ptr->ActiveSequencer_Mask);	
 	
 
