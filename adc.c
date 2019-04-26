@@ -1,0 +1,24 @@
+
+
+#include "adc.h"
+
+
+
+/*This 2-D array holds the base addresse and the pin number of the Analog Input pins of tm4 microcontroller*/
+static uint32_t ADC_AnalogInputPin[12][2]=
+{
+   {GPIO_PORT_E_APB_BASE_ADDRESSE,0X3},
+   {GPIO_PORT_E_APB_BASE_ADDRESSE,0X2},
+   {GPIO_PORT_E_APB_BASE_ADDRESSE,0X1},
+   {GPIO_PORT_E_APB_BASE_ADDRESSE,0X0},
+   {GPIO_PORT_D_APB_BASE_ADDRESSE,0X3},
+   {GPIO_PORT_D_APB_BASE_ADDRESSE,0X2},
+   {GPIO_PORT_D_APB_BASE_ADDRESSE,0X1},
+   {GPIO_PORT_D_APB_BASE_ADDRESSE,0X0},
+	 {GPIO_PORT_E_APB_BASE_ADDRESSE,0X5},
+   {GPIO_PORT_E_APB_BASE_ADDRESSE,0X4},
+   {GPIO_PORT_B_APB_BASE_ADDRESSE,0X4},
+   {GPIO_PORT_B_APB_BASE_ADDRESSE,0X5}
+};
+
+
