@@ -8,18 +8,15 @@
 #include "std_types.h"
 
 
+/*Shifting Macros*/
+#define SHIFT(A,B)   ((A*4)+(B))
+
+
 
 /*This defines to select the trigger source for each Sample Sequencer for each ADC
   Please note that if the sequencer is not activated ,there will be no affect for these triggers*/
-#define ADC0_SAMPLE_SEQUNECER0_SOURCE_SELECT     0xFF
-#define ADC0_SAMPLE_SEQUNECER1_SOURCE_SELECT		 0xFF
-#define ADC0_SAMPLE_SEQUNECER2_SOURCE_SELECT     0xFF 
-#define ADC0_SAMPLE_SEQUNECER3_SOURCE_SELECT     0xFF 
-
-#define ADC1_SAMPLE_SEQUNECER0_SOURCE_SELECT     0xFF
-#define ADC1_SAMPLE_SEQUNECER1_SOURCE_SELECT		 0xFF
-#define ADC1_SAMPLE_SEQUNECER2_SOURCE_SELECT     0xFF 
-#define ADC1_SAMPLE_SEQUNECER3_SOURCE_SELECT     0xFF 
+#define ADC0_SAMPLE_SEQUNECERS_SOURCE_SELECT     0xFFFF
+#define ADC1_SAMPLE_SEQUNECERS_SOURCE_SELECT     0xFFFF
 
 
 
@@ -38,9 +35,20 @@ ADC_0,ADC_1
 typedef enum
 {
 
-INTERRUPT_ENABLED,INTERRUPT_DISABLED
+INTERRUPT_DISABLED,INTERRUPT_ENABLED
 
 }ADC_InterruptSelect;
+
+
+typedef enum
+{
+
+	SEQUENCER_0,
+	SEQUENCER_1,
+	SEQUENCER_2,
+	SEQUENCER_3
+	
+}ADC_Sequencer;
 
 
 
@@ -69,24 +77,44 @@ typedef enum
 typedef enum
 {
 
-TEMP_SENSOR,NORMAL_SELECT
+NORMAL_SELECT,TEMP_SENSOR
 
 }ADC_TempSenseOrNormal;
 
+
+
+typedef struct sample
+{
+	
+	suint8_t SampleNumber; /*signed 8-bits*/
+	uint8_t AnalogInput;
+	uint8_t LastSample; /* 1 means it is the last sample in its sequencer*/
+  ADC_Sequencer SequencerNumber;
+	ADC_TempSenseOrNormal T_OR_N;
+	ADC_InterruptSelect IS;
+	
+
+}ADC_Sample;
 
 
 /*The Configure Structure required to initiate the ADC module*/
 typedef struct configureAdc
 {
 
-	uint8_t AnalogInputs_Select[8];
-	ADC_TempSenseOrNormal TempSensorNormal_Select[8];
-	ADC_EndOfConversion EOF;
+	/*Reference to Samples Array in all sequencers presented in ADC Module*/
+	/*If you don't need to fill all the samples
+	  Fill the Sample after the last one with sample number -ve*/ 
+	ADC_Sample* Samples;
 	ADC_Number AN;
-	ADC_InterruptSelect IS;
+	 
+	/*Mask to enable and disable interrutps for the 4 sequencers the ADC module*/
+	uint8_t InterruptSelect_Mask;
 	
 	/*Mask to enable and disable the 4 sequencers in the ADC module*/
 	uint8_t ActiveSequencer_Mask;
+	
+	/*Mask to enable the ports clock for ADC module*/
+	uint8_t PortGPIOClock_Mask;
 	
 }ADC_ConfigureStruct;
 
