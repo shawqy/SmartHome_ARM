@@ -23,8 +23,9 @@ static uint32_t USART_baseAddresses[]=
 /* Send Byte From UART */
 void UART_sendByte(UART_Number uNumber,const uint8_t jOneChar) {
 
-	while((*((volatile uint32_t *)((USART_baseAddresses[uNumber]+UART_FLAG_R_OFFSET))))
-	& 0x00000020 != 0x00000020) {};
+	// 0x00000020 --> TXFF :: Trasnmitter Full Bit number 5 
+	while(!(*((volatile uint32_t *)((USART_baseAddresses[uNumber]+UART_FLAG_R_OFFSET))))
+	& 0x00000020){};
 
 	(*((volatile uint32_t *)((USART_baseAddresses[uNumber]+UART_DATA_R_OFFSET)))) = jOneChar ;
 
