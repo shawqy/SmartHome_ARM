@@ -29,3 +29,10 @@ void UART_sendByte(UART_Number uNumber,const uint8_t jOneChar) {
 	(*((volatile uint32_t *)((USART_baseAddresses[uNumber]+UART_DATA_R_OFFSET)))) = jOneChar ;
 
 }
+
+/* Send String From UART */ 
+void UART_sendString(UART_Number uNumber,const uint8_t* jOneWord) {
+	for (int i = 0 ; jOneWord[i] != '\0' ; i++) {
+		UART_sendByte(uNumber,jOneWord[i]);
+	}
+}
