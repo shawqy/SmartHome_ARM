@@ -18,6 +18,9 @@
 
 #define UNLOCK_32_BIT_VALUE 0X4C4F434B
 
+
+
+/*GPIO*/
 #define GPIO_PORT_A_APB_BASE_ADDRESSE		(0x40004000)
 #define GPIO_PORT_B_APB_BASE_ADDRESSE		(0x40005000)
 #define GPIO_PORT_C_APB_BASE_ADDRESSE		(0x40006000)
@@ -40,6 +43,9 @@
 #define GPIO_PORT_DATA_R_OFFSET               (0x000003FC)
 
 
+
+/*UART*/
+
 #define UART0_R_BASE_ADDRESSE		                (0x4000C000)
 #define UART1_R_BASE_ADDRESSE		                (0x4000D000)
 #define UART2_R_BASE_ADDRESSE		                (0x4000E000)
@@ -55,6 +61,21 @@
 #define UART_CRH_R_OFFSET												(0x0000002C)
 #define UART_UARTIM_R_OFFSET										(0x00000038)
 
+
+
+/*ADC*/
+
+#define ADC0_R_BASE_ADDRESSE										(0x40038000)
+#define ADC1_R_BASE_ADDRESSE										(0x40039000)
+
+
+#define ADC_R_Active_Sequencer_OFFSET				        	  (0x00000000)
+#define ADC_R_Event_Multiplexer_Select_OFFSET					  (0x00000014)
+#define ADC_Sample_Sequencer0_Control_R_OFFSET          (0x00000044)
+#define ADC_Sample_Sequencer1_Control_R_OFFSET          (0x00000064)
+#define ADC_Sample_Sequencer2_Control_R_OFFSET          (0x00000084)
+#define ADC_Sample_Sequencer3_Control_R_OFFSET          (0x000000A4)
+#define ADC_Interrupt_Mask_R_OFFSET                     (0x00000008)
 
 
 
