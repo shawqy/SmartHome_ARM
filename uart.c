@@ -37,3 +37,25 @@ void UART_sendString(UART_Number uNumber,const uint8_t* jOneWord) {
 		UART_sendByte(uNumber,jOneWord[i]);
 	}
 }
+uint8_t UART_receiveByte(UART_Number uNumber){
+			
+	//checking for the RXFE (bit 4) int the FLAG REGISTER....if bit = 0 then not empty and 
+	//we will start reading
+	while(((*((volatile uint32_t *)(USART_baseAddresses[uNumber]+UART_FLAG_R_OFFSET)))
+	& 0x00000010) != 0){};
+				
+		return (*((volatile uint32_t *)((USART_baseAddresses[uNumber]+UART_DATA_R_OFFSET))));
+}
+
+void UART_receiveString(UART_Number uNumber , uint8_t* Word){
+	
+	 int i = -1;
+	 do{
+			i++;
+			Word[i] = UART_receiveByte(uNumber);	
+	 
+	 }while(Word[i] != '#');
+	 
+	 Word[i] = '/0';
+	 
+}
