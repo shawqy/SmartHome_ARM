@@ -87,6 +87,9 @@
 #define ADC_Sample_Sequencer3_Control_R_OFFSET          (0x000000A4)
 #define ADC_Interrupt_Mask_R_OFFSET                     (0x00000008)
 #define ADC_PSSI_OFFSET                                 (0x00000014)
+#define ADC_RIS_OFFSET																	(0x00000004)
+#define ADC_SSFIFO0_OFFSET                              (0x00000048)
+#define ADC_ISC_OFFSET                                  (0x0000000C)
 
 
 

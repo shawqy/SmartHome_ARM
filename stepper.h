@@ -59,7 +59,7 @@ void STEPPER_init(const STEPPER_ConfigStructure * );
 
 /*This function is used to reset the GPIO settings for the STEPPER motor*/
 /*Not fully developed for now*/
-void STEPPER_deinit();
+void STEPPER_deinit(void);
 
 /*This function is used to rotate the STEPPER motor with any degree in clock wise direction*/
 /*Inputs: The desired degree*/

@@ -23,9 +23,8 @@ void UART_sendByte(UART_Number uNumber, const uint8_t jOneChar)
 {
 
 	// 0x00000020 --> TXFF :: Transmitter Full Bit number 5
-	while (!(*((volatile uint32_t *)((USART_baseAddresses[uNumber] + UART_FLAG_R_OFFSET)))) & 0x00000020)
-	{
-	};
+	while (!(*((volatile uint32_t *)((USART_baseAddresses[uNumber] + UART_FLAG_R_OFFSET)))) & 0x00000020);
+	
 
 	(*((volatile uint32_t *)((USART_baseAddresses[uNumber] + UART_DATA_R_OFFSET)))) = jOneChar;
 }
@@ -33,7 +32,8 @@ void UART_sendByte(UART_Number uNumber, const uint8_t jOneChar)
 /* Send String From UART */
 void UART_sendString(UART_Number uNumber, const uint8_t *jOneWord)
 {
-	for (int i = 0; jOneWord[i] != '\0'; i++)
+	int i;
+	for ( i = 0; jOneWord[i] != '\0'; i++)
 	{
 		UART_sendByte(uNumber, jOneWord[i]);
 	}
@@ -44,8 +44,7 @@ uint8_t UART_receiveByte(UART_Number uNumber){
 			
 	//checking for the RXFE (bit 4) int the FLAG REGISTER....if bit = 0 then not empty and 
 	//we will start reading
-	while(((*((volatile uint32_t *)(USART_baseAddresses[uNumber]+UART_FLAG_R_OFFSET)))
-	& 0x00000010) != 0){};
+	while(((*((volatile uint32_t *)(USART_baseAddresses[uNumber]+UART_FLAG_R_OFFSET)))& 0x00000010) != 0);
 				
 		return (*((volatile uint32_t *)(USART_baseAddresses[uNumber]+UART_DATA_R_OFFSET)));
 }
