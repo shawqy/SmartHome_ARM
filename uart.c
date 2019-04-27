@@ -44,18 +44,18 @@ uint8_t UART_receiveByte(UART_Number uNumber){
 	while(((*((volatile uint32_t *)(USART_baseAddresses[uNumber]+UART_FLAG_R_OFFSET)))
 	& 0x00000010) != 0){};
 				
-		return (*((volatile uint32_t *)((USART_baseAddresses[uNumber]+UART_DATA_R_OFFSET))));
+		return (*((volatile uint32_t *)(USART_baseAddresses[uNumber]+UART_DATA_R_OFFSET)));
 }
 
 void UART_receiveString(UART_Number uNumber , uint8_t* Word){
 	
 	 int i = -1;
 	 do{
-			i++;
-			Word[i] = UART_receiveByte(uNumber);	
+		i++;
+		Word[i] = UART_receiveByte(uNumber);	
 	 
 	 }while(Word[i] != '#');
 	 
-	 Word[i] = '/0';
+	 Word[i] = '\0';
 	 
 }
