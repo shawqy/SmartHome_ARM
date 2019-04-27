@@ -2,6 +2,8 @@
 #include "uart.h"
 
 
+
+
 /*This global array can only be accessed from this file*/
 /*This array holds the different UARTs modules for the tm4c123gh6pm controller*/
 /*All these addresses are pre-defined in the mic_config.h*/
@@ -37,25 +39,86 @@ void UART_sendString(UART_Number uNumber,const uint8_t* jOneWord) {
 		UART_sendByte(uNumber,jOneWord[i]);
 	}
 }
-uint8_t UART_receiveByte(UART_Number uNumber){
-			
-	//checking for the RXFE (bit 4) int the FLAG REGISTER....if bit = 0 then not empty and 
-	//we will start reading
-	while(((*((volatile uint32_t *)(USART_baseAddresses[uNumber]+UART_FLAG_R_OFFSET)))
-	& 0x00000010) != 0){};
-				
-		return (*((volatile uint32_t *)(USART_baseAddresses[uNumber]+UART_DATA_R_OFFSET)));
-}
 
-void UART_receiveString(UART_Number uNumber , uint8_t* Word){
-	
-	 int i = -1;
-	 do{
-		i++;
-		Word[i] = UART_receiveByte(uNumber);	
-	 
-	 }while(Word[i] != '#');
-	 
-	 Word[i] = '\0';
-	 
+
+
+void UART_init(const UART_ConfigureStruct* configure_pointer)
+{
+	uint8_t uart_num;
+    //enable system clk
+    SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R0;
+
+    //enable GPIO clk
+	SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R0;
+
+
+	//determine the the UART Number to know which TX and RX we will use
+	uint8_t uart_num = configure_pointer->UN;
+
+	switch(uart_num)
+	{
+		case UART_0 :
+			GPIO_PORTA_AFSEL_R |= GPIO_PA10_M;
+			GPIO_PORTA_DEN_R   |= GPIO_PA10_M;
+			GPIO_PORTA_PCTL_R  |= 0x11;
+		break;
+		
+		case UART_1 :
+			GPIO_PORTB_AFSEL_R |= GPIO_PB10_M;
+			GPIO_PORTB_DEN_R   |= GPIO_PB10_M;
+			GPIO_PORTB_PCTL_R  |= 0x11;
+		break;
+		
+		case UART_2 :
+			GPIO_PORTD_AFSEL_R |= GPIO_PD76_M;
+			GPIO_PORTD_DEN_R   |= GPIO_PD76_M;
+			GPIO_PORTD_PCTL_R  |= 0x11;
+		break;
+		
+		case UART_3 :
+			GPIO_PORTC_AFSEL_R |= GPIO_PC76_M;
+			GPIO_PORTC_DEN_R   |= GPIO_PC76_M;
+			GPIO_PORTC_PCTL_R  |= 0x11;
+		break;
+
+		case UART_4 :
+			GPIO_PORTC_AFSEL_R |= GPIO_PC54_M;
+			GPIO_PORTC_DEN_R   |= GPIO_PC54_M;
+			GPIO_PORTC_PCTL_R  |= 0x11;
+		break;
+		
+		case UART_5 :
+			GPIO_PORTE_AFSEL_R |= GPIO_PE54_M;
+			GPIO_PORTE_DEN_R   |= GPIO_PE54_M;
+			GPIO_PORTE_PCTL_R  |= 0x11;
+		break;
+		
+		case UART_6 :
+			GPIO_PORTD_AFSEL_R |= GPIO_PD54_M;
+			GPIO_PORTD_DEN_R   |= GPIO_PD54_M;
+			GPIO_PORTD_PCTL_R  |= 0x11;
+		break;
+		
+		case UART_7 :
+			GPIO_PORTE_AFSEL_R |= GPIO_PE10_M;
+			GPIO_PORTE_DEN_R   |= GPIO_PE10_M;
+			GPIO_PORTE_PCTL_R  |= 0x11;
+		break;
+	}
+
+	//disable the UART to set it
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CTL_R_OFFSET)))) = ~ UART_CTL_UARTEN;
+
+	//adjust the Baud Rate
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART0_IBRD_R_OFFSET)))) = 520;
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART0_FBRD_R_OFFSET)))) = 53;
+
+	//adjust the UARTLCRH 
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CRH_R_OFFSET)))) = ;
+
+
+
+	//enable the UART to set it
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CTL_R_OFFSET)))) =  UART_CTL_UARTEN;
+
 }
