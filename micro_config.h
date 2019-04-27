@@ -79,14 +79,18 @@
 #define ADC1_R_BASE_ADDRESSE										(0x40039000)
 
 
-#define ADC_R_Active_Sequencer_OFFSET				        	  (0x00000000)
-#define ADC_R_Event_Multiplexer_Select_OFFSET					  (0x00000014)
+#define ADC_R_Active_Sequencer_OFFSET				    (0x00000000)
+#define ADC_R_Event_Multiplexer_Select_OFFSET			(0x00000014)
 #define ADC_Sample_Sequencer0_Control_R_OFFSET          (0x00000044)
 #define ADC_Sample_Sequencer1_Control_R_OFFSET          (0x00000064)
 #define ADC_Sample_Sequencer2_Control_R_OFFSET          (0x00000084)
 #define ADC_Sample_Sequencer3_Control_R_OFFSET          (0x000000A4)
 #define ADC_Interrupt_Mask_R_OFFSET                     (0x00000008)
 #define ADC_PSSI_OFFSET                                 (0x00000014)
+#define ADC_RIS_OFFSET                                  (0x00000004)
+#define ADC_SSFIFO0_OFFSET                              (0x00000048)
+#define ADC_ISC_OFFSET                                  (0x0000000C)
+
 
 
 
