@@ -44,7 +44,24 @@ void UART_sendString(UART_Number uNumber,const uint8_t* jOneWord) {
 
 void UART_init(const UART_ConfigureStruct* configure_pointer)
 {
-	uint8_t uart_num;
+	uint8_t uart_num,word_wdth,prt_sel,f_en,stp,prt_en;
+
+	word_wdth =  configure_pointer->UWL;
+	word_wdth = (word_wdth << 5);
+
+	prt_sel = configure_pointer->UPS;
+	prt_sel = (prt_sel << 2);
+
+	f_en = configure_pointer->UF;
+	f_en = (f_en << 4);
+
+	stp = configure_pointer->USB;
+	stp = (stp << 3)
+
+	prt_en = configure_pointer->UPE;
+	prt_en = (prt_en << 1)
+
+
     //enable system clk
     SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R0;
 
@@ -53,7 +70,7 @@ void UART_init(const UART_ConfigureStruct* configure_pointer)
 
 
 	//determine the the UART Number to know which TX and RX we will use
-	uint8_t uart_num = configure_pointer->UN;
+	uart_num = configure_pointer->UN;
 
 	switch(uart_num)
 	{
@@ -114,11 +131,14 @@ void UART_init(const UART_ConfigureStruct* configure_pointer)
 	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART0_FBRD_R_OFFSET)))) = 53;
 
 	//adjust the UARTLCRH 
-	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CRH_R_OFFSET)))) = ;
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CRH_R_OFFSET)))) |= word_wdth;
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CRH_R_OFFSET)))) |= prt_sel;
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CRH_R_OFFSET)))) |= stp;
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CRH_R_OFFSET)))) |= prt_en;
 
 
 
 	//enable the UART to set it
-	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CTL_R_OFFSET)))) =  UART_CTL_UARTEN;
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num]+UART_CTL_R_OFFSET)))) |=  UART_CTL_UARTEN;
 
 }
