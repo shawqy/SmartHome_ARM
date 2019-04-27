@@ -98,6 +98,10 @@ typedef struct configure
 void UART_init(const UART_ConfigureStruct*);
 
 
+/*This function is not full developed untill now*/
+void UART_deinit();
+
+
 /*This function sends only one byte of data(Word Length)*/
 /*Inputs: The UART number module to be sent from
           The 8-bits word to be sen                     */
