@@ -176,16 +176,18 @@ void ADC_init(const ADC_ConfigureStruct* configStruct_ptr)
 
 	
 uint16_t ADC_readChannel(ADC_Number){
-/*First start convertion be setting PSSI bit 0 for ss0 by one*/
+	
+	/*First start convertion be setting PSSI bit 0 for ss0 by one*/
 	(*((volatile uint32_t*)(ADC_BaseAdresse[ADC_Number] + ADC_PSSI_OFFSET )))  |= 1;
 
-/*check if RIS is equale 0 wait untill it be one indicate the end of conversion*/
+	/*check if RIS is equale 0 wait untill it be one indicate the end of conversion*/
 	while (	((*((volatile uint32_t*)(ADC_BaseAdresse[ADC_Number] + ADC_RIS_OFFSET  ))) & 1) == 0);
 
 	uint16_t result = (*((volatile uint32_t*)(ADC_BaseAdresse[ADC_Number] + ADC_SSFIFO0_OFFSET)))
 
 	/*reset the ADC for new conversion*/
 	/*result is taken into variable first because setting ISC clear the data from FIFO0 reg*/
+
 	(*((volatile uint32_t*)(ADC_BaseAdresse[ADC_Number] + ADC_ISC_OFFSET ))) |= 1);
 	return result;
 
