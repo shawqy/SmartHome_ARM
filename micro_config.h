@@ -55,12 +55,22 @@
 #define UART6_R_BASE_ADDRESSE		                (0x40012000)
 #define UART7_R_BASE_ADDRESSE		                (0x40013000)
 
-#define UART_DATA_R_OFFSET											(0x00000000)
-#define UART_FLAG_R_OFFSET											(0x00000018)
-#define UART_CTL_R_OFFSET												(0x00000030)
-#define UART_CRH_R_OFFSET												(0x0000002C)
-#define UART_UARTIM_R_OFFSET										(0x00000038)
+#define UART_DATA_R_OFFSET							(0x00000000)
+#define UART_FLAG_R_OFFSET							(0x00000018)
+#define UART_CTL_R_OFFSET							(0x00000030)
+#define UART_CRH_R_OFFSET							(0x0000002C)
+#define UART_UARTIM_R_OFFSET						(0x00000038)
+#define UART0_IBRD_R_OFFSET                         (0x00000024)    
+#define UART0_FBRD_R_OFFSET                         (0x00000028)
 
+#define GPIO_PA10_M                                 (0x03) //UART0
+#define GPIO_PB10_M                                 (0x03) //UART1 
+#define GPIO_PD76_M                                 (0xC0) //UART2
+#define GPIO_PC76_M                                 (0xC0) //UART3
+#define GPIO_PC54_M                                 (0x30) //UART4
+#define GPIO_PE54_M                                 (0x30) //UART5
+#define GPIO_PD54_M                                 (0x30) //UART6
+#define GPIO_PE10_M                                 (0x03) //UART7
 
 
 /*ADC*/
