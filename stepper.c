@@ -1,5 +1,4 @@
 #include "stepper.h"
-#include <math.h>
 static uint32_t Port_baseAddresse;
 static STEPPER_Pins Pins[4];
 static uint8_t steps[] = {0x9, 0x3, 0x6, 0xC};
