@@ -39,6 +39,13 @@ static uint32_t ADC_SequenceControlRegister_Offset[]=
 
 
 
+/*This pointer to function will used to call the interrupt user defined function inside the ISR*/
+static void(*ADC_callBackPtr)(void)=NULL_PTR;
+
+
+
+
+
 
 void ADC_init(const ADC_ConfigureStruct* configStruct_ptr)
 {

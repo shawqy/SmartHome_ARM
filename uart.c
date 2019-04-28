@@ -17,6 +17,15 @@ static uint32_t USART_baseAddresses[] =
 		UART7_R_BASE_ADDRESSE
 
 };
+	
+/*These pointers to function will used to call the interrupt user defined function inside the ISR*/
+static void(*UART_transCallBackPtr)(void)=NULL_PTR;
+static void(*UART_receiveCallBackPtr)(void)=NULL_PTR;
+
+
+
+
+
 
 /* Send Byte From UART */
 void UART_sendByte(UART_Number uNumber, const uint8_t jOneChar)
