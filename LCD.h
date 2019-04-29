@@ -22,7 +22,7 @@
 #define RW 0x40 
 #define EN 0x80 
 
-void LCD_init();
+void LCD_init(void);
 void LCD_sendCommand(uint8 command);
 void LCD_displayCharacter(uint8 data);
 void LCD_displayString(const uint8 *data);

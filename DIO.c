@@ -129,6 +129,7 @@ uint8 DIO_ReadPort (Port port_index, uint8 pins_mask) {
 		
 		}
 		
+		
 	}
 
 	

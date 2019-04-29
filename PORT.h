@@ -5,14 +5,6 @@
 #include "macros.h"
 #include "std_types.h"
 
-typedef enum
-{
-
-PORT_A,PORT_B,PORT_C,PORT_D,PORT_E,PORT_F
-
-
-}Port;
-
 
 typedef enum
 {
