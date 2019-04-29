@@ -165,6 +165,9 @@ void UART_init(const UART_ConfigureStruct *configure_pointer)
 	(*((volatile uint32_t *)((USART_baseAddresses[uart_num] + UART_CRH_R_OFFSET)))) |= stp;
 	(*((volatile uint32_t *)((USART_baseAddresses[uart_num] + UART_CRH_R_OFFSET)))) |= prt_en;
 
+	//adjuct UARTCC to internal clock
+	(*((volatile uint32_t *)((USART_baseAddresses[uart_num] + UART_CC_R_OFFSET)))) = 0;
+	
 	//enable the UART to set it
 	(*((volatile uint32_t *)((USART_baseAddresses[uart_num] + UART_CTL_R_OFFSET)))) |= UART_CTL_UARTEN;
 }
