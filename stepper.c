@@ -56,3 +56,4 @@ void STEPPER_counterClockWise(const uint8_t angle)
         }
         iterationCount++;
     }
+}
