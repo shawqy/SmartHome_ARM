@@ -39,6 +39,19 @@ static uint32_t ADC_SequenceControlRegister_Offset[]=
 
 
 
+static uint32_t ADC_SequenceMultiplexerSelect_Offset[]=
+{
+   ADC_Sample_Sequencer0_Mux_Select_R_OFFSET,
+   ADC_Sample_Sequencer1_Mux_Select_R_OFFSET,
+   ADC_Sample_Sequencer2_Mux_Select_R_OFFSET,
+   ADC_Sample_Sequencer3_Mux_Select_R_OFFSET
+
+};
+
+
+
+
+
 /*This pointer to function will used to call the interrupt user defined function inside the ISR*/
 static void(*ADC_callBackPtr)(void)=NULL_PTR;
 
@@ -51,7 +64,7 @@ void ADC_init(const ADC_ConfigureStruct* configStruct_ptr)
 {
 
 		uint32_t Port_baseAddresse,Adc_CurrentBaseAddresse;
-	  uint8_t  Adc_SequencerOffset,Pin_number,i;
+	  uint8_t  Adc_SequencerControlOffset,Adc_SequencerMuxOffset,Pin_number,i;
 	
 	
 	
@@ -124,7 +137,7 @@ void ADC_init(const ADC_ConfigureStruct* configStruct_ptr)
    /*Set The trigger source for the four sequencers*/
 	 /*If the sequencer is disabled (No effect)*/
 	 
-	if(configStruct_ptr->AN)
+	if((configStruct_ptr->AN)==ADC_0)
   {
 		/*ADC0*/
 	(*((volatile uint32_t*)( Adc_CurrentBaseAddresse + ADC_R_Event_Multiplexer_Select_OFFSET )))=ADC0_SAMPLE_SEQUNECERS_SOURCE_SELECT;
@@ -151,37 +164,47 @@ void ADC_init(const ADC_ConfigureStruct* configStruct_ptr)
 		   
 		
 		 /*Get the offset of the Sequencer control register to the corrosponding sequencer number*/
-		 Adc_SequencerOffset=ADC_SequenceControlRegister_Offset[configStruct_ptr->Samples[i].SequencerNumber];
+		 Adc_SequencerControlOffset=ADC_SequenceControlRegister_Offset[configStruct_ptr->Samples[i].SequencerNumber];
+		 Adc_SequencerMuxOffset=ADC_SequenceMultiplexerSelect_Offset[configStruct_ptr->Samples[i].SequencerNumber];
 		 
 		 
-		/*Set the setting for each Sequence*/
+		/*Set the settings for each Sequence*/
+		
+		/*Set the number of analog input for each sample*/
+		(*((volatile uint32_t*)( Adc_CurrentBaseAddresse+Adc_SequencerMuxOffset)))|=((configStruct_ptr->Samples[i].AnalogInput & 0x0F)<<configStruct_ptr->Samples[i].SampleNumber);
 		
 		/*Set internal temp sensor or analog input*/
-		
-		(*((volatile uint32_t*)( Adc_CurrentBaseAddresse+Adc_SequencerOffset)))|=(configStruct_ptr->Samples[i].T_OR_N<<SHIFT(i,BIT_3));
+		(*((volatile uint32_t*)( Adc_CurrentBaseAddresse+Adc_SequencerControlOffset)))|=(configStruct_ptr->Samples[i].T_OR_N<<SHIFT(i,BIT_3));
 			
 		/*Set interrupt enable or disable*/
-		(*((volatile uint32_t*)( Adc_CurrentBaseAddresse+Adc_SequencerOffset)))|=(configStruct_ptr->Samples[i].IS<<SHIFT(i,BIT_2));
+		(*((volatile uint32_t*)( Adc_CurrentBaseAddresse+Adc_SequencerControlOffset)))|=(configStruct_ptr->Samples[i].IS<<SHIFT(i,BIT_2));
 		
 		/*Set the end of sequence in a sequencer*/
-		(*((volatile uint32_t*)( Adc_CurrentBaseAddresse+Adc_SequencerOffset)))|=(configStruct_ptr->Samples[i].LastSample<<SHIFT(i,BIT_1));
+		(*((volatile uint32_t*)( Adc_CurrentBaseAddresse+Adc_SequencerControlOffset)))|=(configStruct_ptr->Samples[i].LastSample<<SHIFT(i,BIT_1));
 		 
 	
 	}
 	
  }
 	
+ 
 
- /*INTERRUPT Enable For each Sequencer*/
- (*((volatile uint32_t*)( Adc_CurrentBaseAddresse+ADC_Interrupt_Mask_R_OFFSET)))|=configStruct_ptr->InterruptSelect_Mask;
+	/*INTERRUPT Enable For each Sequencer*/
+	(*((volatile uint32_t*)( Adc_CurrentBaseAddresse+ADC_Interrupt_Mask_R_OFFSET)))|=configStruct_ptr->InterruptSelect_Mask;
  
- 
- 
+  
+ /*Enable The ADC Sequencers*/
+ (*((volatile uint32_t*)( Adc_CurrentBaseAddresse + ADC_R_Active_Sequencer_OFFSET )))|=(configStruct_ptr->ActiveSequencer_Mask);	
+
  
 
 }
 
 	
+
+
+
+
 uint16_t ADC_readChannel(ADC_Number AN){
 
 	uint16_t result;

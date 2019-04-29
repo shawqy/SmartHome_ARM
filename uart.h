@@ -128,13 +128,11 @@ void UART_receiveString(UART_Number,uint8_t*);
 
 /*This function is used to set the call back function which will be called
   in the interrupt service routine of the UART when transmission occurs*/
-/*Inputs: A Pointer to a function which takes void and returns void*/
 void UART_setTransmitCallBack(void(*)(void));
 
 
 /*This function is used to set the call back function which will be called
   in the interrupt service routine of the UART when Reception occurs*/
-/*Inputs: A Pointer to a function which takes void and returns void*/
 void UART_setReceiveCallBack(void(*)(void));
 
 
