@@ -40,7 +40,10 @@ PIN_7  /* 7 */
 typedef struct configstep
 {
 
- uint32_t Port; /*The Port at which the STEPPER driver is connected to*/
+	uint8_t Port_Number;	/*The number of the port to be connected on*/
+												/*A==>0 , B==>1  ....*/
+ 
+	uint32_t Port; /*The Port at which the STEPPER driver is connected to*/
 	
  STEPPER_Pins Pins[4]; /*The 4 Pins Of The Port at which the STEPPER driver is connected to*/	
 	
@@ -54,7 +57,7 @@ typedef struct configstep
 
 /*This function is used to set the GPIO settings for the STEPPER motor*/
 /*Inputs: Reference to the configure structure*/
-void STEPPER_init(const STEPPER_ConfigStructure * );
+void STEPPER_init(STEPPER_ConfigStructure * );
 
 
 /*This function is used to reset the GPIO settings for the STEPPER motor*/

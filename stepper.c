@@ -1,6 +1,6 @@
 #include "stepper.h"
 static uint32_t Port_baseAddresse;
-static STEPPER_Pins Pins[4];
+static STEPPER_Pins *Pins;
 static uint8_t steps[] = {0x9, 0x3, 0x6, 0xC};
 static uint16_t nextStep = 0;
 
@@ -25,6 +25,51 @@ static uint16_t nextStep = 0;
 	
 */
 
+
+
+void STEPPER_init(STEPPER_ConfigStructure *  configStruct_ptr)
+{
+  /*Set the settings to be global*/
+  Port_baseAddresse=configStruct_ptr->Port;
+	Pins=configStruct_ptr->Pins; /*This will discard the Qualifier of Constant Structure*/
+
+
+	
+	/*Enable Port Clock*/
+	 SET_BIT(SYSCTL_RCGCGPIO_R,1<<configStruct_ptr->Port_Number);
+
+	/*Wait for the ready flag to be able to access the Port*/
+	 while(BIT_IS_CLEAR(SYSCTL_PRGPIO_R,configStruct_ptr->Port_Number));         
+	
+	/*Unlock The Port*/
+	(*((volatile uint32_t*)(Port_baseAddresse+GPIO_PORT_LOCK_R_OFFSET)))=UNLOCK_32_BIT_VALUE;
+	
+	
+	/*Adjust the Direction*/
+	(*((volatile uint32_t*)(Port_baseAddresse+GPIO_PORT_DIRECTION_R_OFFSET)))|=(1<<Pins[0])|(1<<Pins[1])|(1<<Pins[2])|(1<<Pins[3]);
+	
+	/*Enable The Digital Functionality*/
+	(*((volatile uint32_t*)(Port_baseAddresse+GPIO_PORT_DEN_R_OFFSET)))|=(1<<Pins[0])|(1<<Pins[1])|(1<<Pins[2])|(1<<Pins[3]);
+	
+	
+	/*Turn off the Analog Mode*/
+	(*((volatile uint32_t*)(Port_baseAddresse+GPIO_PORT_AMSEL_R_OFFSET)))&=~(1<<Pins[0])&~(1<<Pins[1])&~(1<<Pins[2])&~(1<<Pins[3]);
+	
+  /*Disable The Alternative Function*/
+	(*((volatile uint32_t*)(Port_baseAddresse+GPIO_PORT_AFSEL_R_OFFSET)))&=~(1<<Pins[0])&~(1<<Pins[1])&~(1<<Pins[2])&~(1<<Pins[3]);
+	
+	
+	/*Set the Output pins to zero to protect the connected driver*/
+	(*((volatile uint32_t*)(Port_baseAddresse+GPIO_PORT_DATA_R_OFFSET)))&=~(1<<Pins[0])&~(1<<Pins[1])&~(1<<Pins[2])&~(1<<Pins[3]);
+
+}
+
+	
+
+
+
+
+
 void STEPPER_clockWise(const uint8_t angle)
 {
     //  Get the number of iterations needed to get the specified angle
@@ -41,6 +86,11 @@ void STEPPER_clockWise(const uint8_t angle)
         iterationCount++;
     }
 }
+
+
+
+
+
 void STEPPER_counterClockWise(const uint8_t angle)
 {
     //  Get the number of iterations needed to get the specified angle

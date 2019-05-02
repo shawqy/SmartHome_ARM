@@ -19,9 +19,88 @@ static uint32_t USART_baseAddresses[] =
 };
 	
 /*These pointers to function will used to call the interrupt user defined function inside the ISR*/
-static void(*UART_transCallBackPtr)(void)=NULL_PTR;
-static void(*UART_receiveCallBackPtr)(void)=NULL_PTR;
+static void(*UART0_transCallBackPtr)(void)=NULL_PTR;
+static void(*UART0_receiveCallBackPtr)(void)=NULL_PTR;
+static void(*UART1_transCallBackPtr)(void)=NULL_PTR;
+static void(*UART1_receiveCallBackPtr)(void)=NULL_PTR;
 
+
+
+
+
+
+/*ISRs*/
+
+
+void UART0_Handler()
+{
+		
+	
+	 /*Check if the interrupt signaled due to transmission*/
+	 if(BIT_IS_SET(UART0_MIS_R,5))
+		{
+			/*Execute the trans call back function*/
+				UART0_transCallBackPtr();
+			
+			/*Clear The Trans flag*/
+			  SET_BIT(UART0_ICR_R,BIT_5);
+		}
+		
+		
+		
+	 /*Check if the interrupt signaled due to reception*/
+	 if(BIT_IS_SET(UART0_MIS_R,4))
+		{
+			/*Execute the trans call back function*/
+				UART0_receiveCallBackPtr();
+
+			/*Clear The Recep flag*/
+			  SET_BIT(UART0_ICR_R,BIT_4);
+		
+		}
+
+
+
+}
+
+
+
+void UART1_Handler()
+{
+		
+	
+	 /*Check if the interrupt signaled due to transmission*/
+	 if(BIT_IS_SET(UART1_MIS_R,5))
+		{
+			/*Execute the trans call back function*/
+				UART1_transCallBackPtr();
+			
+			/*Clear The Trans flag*/
+				/*Permission:W1C*/
+					SET_BIT(UART1_ICR_R,BIT_5);
+		}
+		
+		
+		
+	 /*Check if the interrupt signaled due to reception*/
+	 if(BIT_IS_SET(UART1_MIS_R,4))
+		{
+			/*Execute the trans call back function*/
+				UART1_receiveCallBackPtr();
+
+			/*Clear The Recep flag*/
+				/*Permission:W1C*/			
+					SET_BIT(UART1_ICR_R,BIT_4);
+		
+		}
+
+}
+
+
+
+
+/*********************************************************************/
+/*********************************************************************/
 
 
 
@@ -170,4 +249,24 @@ void UART_init(const UART_ConfigureStruct *configure_pointer)
 	
 	//enable the UART to set it
 	(*((volatile uint32_t *)((USART_baseAddresses[uart_num] + UART_CTL_R_OFFSET)))) |= UART_CTL_UARTEN;
+}
+
+
+
+
+void UART_setTransmitCallBack(void(*callBack_ptr)(void),UART_Number UN)
+{
+
+if(UN)	UART1_transCallBackPtr=callBack_ptr;
+else		UART0_transCallBackPtr=callBack_ptr;
+
+}
+
+
+void UART_setReceiveCallBack(void(*callBack_ptr)(void),UART_Number UN)
+{
+	
+if(UN)	UART1_receiveCallBackPtr=callBack_ptr;
+else    UART0_receiveCallBackPtr=callBack_ptr;
+
 }

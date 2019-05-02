@@ -126,7 +126,8 @@ uint8 DIO_ReadPort (Port port_index, uint8 pins_mask) {
         // Port F 
         case 5 : return GPIO_PORTF_DATA_R & pins_mask;  
        
-		
+		    
+			  default : return GPIO_PORTA_DATA_R & pins_mask;
 		}
 		
 		

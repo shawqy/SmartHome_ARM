@@ -148,7 +148,7 @@ uint16_t ADC_readChannel(ADC_Number);
 /*This function is used to set the call back function which will be called in the 
 	interrupt handler routine*/
 /*Inputs: Pointer to function which takes void and return void and points to the call back function*/ 	
-void ADC_setISRCallBack(void(*)(void));
+void ADC_setISRCallBack(void(*)(void),ADC_Number);
 
 
 

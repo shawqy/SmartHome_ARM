@@ -3,6 +3,9 @@
 #include "adc.h"
 #include "stepper.h"
 #include "uart.h"
+#include "LCD.h"
+#include "PORT.h"
+#include "DIO.h"
 
 
 

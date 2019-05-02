@@ -52,12 +52,51 @@ static uint32_t ADC_SequenceMultiplexerSelect_Offset[]=
 
 
 
-/*This pointer to function will used to call the interrupt user defined function inside the ISR*/
-static void(*ADC_callBackPtr)(void)=NULL_PTR;
+/*These pointers to function will be used to call the interrupt user defined function inside the ISRs*/
+/*Note: We wil only use the first sequencers of the two ADCs*/
+static void(*ADC0_Seq0_CallBackPtr)(void)=NULL_PTR;
+static void(*ADC1_Seq0_CallBackPtr)(void)=NULL_PTR;
 
 
 
 
+
+/*ISRs*/
+
+
+
+/*ADC0 Seq0 Handler*/
+void ADC0SS0_Handler()
+{
+ 
+	if(ADC0_Seq0_CallBackPtr != NULL_PTR) 
+				ADC0_Seq0_CallBackPtr();
+	
+	/*Clear The Interrupt flag of sequencer0 in ADC0 */
+	/*Permission:RW1C*/
+		SET_BIT(ADC0_ISC_R,BIT_0);
+
+}
+
+
+/*ADC1 Seq0 Handler*/
+void ADC1SS0_Handler()
+{
+ 
+	if(ADC1_Seq0_CallBackPtr != NULL_PTR) 
+				ADC1_Seq0_CallBackPtr();
+	
+	/*Clear The Interrupt flag of sequencer0 in ADC0 */
+	/*Permission:RW1C*/
+		SET_BIT(ADC1_ISC_R,BIT_0); 
+
+}
+
+
+
+
+/*********************************************************************/
+/*********************************************************************/
 
 
 void ADC_init(const ADC_ConfigureStruct* configStruct_ptr)
@@ -224,3 +263,17 @@ uint16_t ADC_readChannel(ADC_Number AN){
 	return result;
 
 }
+
+
+
+
+
+void ADC_setISRCallBack(void(*callBack_ptr)(void),ADC_Number AN)
+{
+
+ if(AN)	ADC1_Seq0_CallBackPtr=callBack_ptr;
+
+ else 	ADC0_Seq0_CallBackPtr=callBack_ptr;
+ 
+}
+
