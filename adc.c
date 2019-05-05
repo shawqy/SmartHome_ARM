@@ -161,7 +161,7 @@ void ADC_init(const ADC_ConfigureStruct* configStruct_ptr)
    SYSCTL_RCGCADC_R|=(1<<configStruct_ptr->AN);
 		
 	/*Check if The ADC registers can be accessed or not yet*/
-	 while(BIT_IS_CLEAR(SYSCTL_PRADC_R,1<<configStruct_ptr->AN));
+	 while(BIT_IS_CLEAR(SYSCTL_PRADC_R,configStruct_ptr->AN));
 	
 
 	/*Get the current ADC base addresse from the configure structure into a local variable*/
@@ -249,10 +249,11 @@ uint16_t ADC_readChannel(ADC_Number AN){
 	uint16_t result;
 	
 	/*First start convertion be setting PSSI bit 0 for ss0 by one*/
+	/*Please note that the permission in WOOOOOO*/
 	(*((volatile uint32_t*)(ADC_BaseAdresse[AN] + ADC_PSSI_OFFSET )))  |= 1;
 
 	/*check if RIS is equale 0 wait untill it be one indicate the end of conversion*/
-	while (	((*((volatile uint32_t*)(ADC_BaseAdresse[AN] + ADC_RIS_OFFSET  ))) & 1) == 0);
+	//while (	((*((volatile uint32_t*)(ADC_BaseAdresse[AN] + ADC_RIS_OFFSET  ))) & 1) == 0);
 
  result = (*((volatile uint32_t*)(ADC_BaseAdresse[AN] + ADC_SSFIFO0_OFFSET)));
 
