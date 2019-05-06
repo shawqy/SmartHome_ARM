@@ -92,7 +92,7 @@ typedef struct pwmconfig
 	
 	PWM_TimerMode		PWM_TM;	/*To select the mode of the selected timer*/
 
-	PWM_TimerInversion PWM_TI[2];	/*To adjust the inversion fro timerA and timerB inside the selected timer block*/
+	PWM_TimerInversion *PWM_TI;	/*To adjust the inversion fro timerA and timerB inside the selected timer block*/
 	
   PWM_TimerConcatenate PWM_TC;	/*To choose 16 or 32 bit timer operation*/
 
@@ -100,7 +100,7 @@ typedef struct pwmconfig
 	
 	PWM_TimerB		PWM_TB;	/*to enable/disable timerB*/
 	
-	uint32_t PWM_PreScalar[2];	/*to set the prescalar for Timer A and Timer B, and adjust the desired Timer Frequency*/
+	uint32_t *PWM_PreScalar;	/*to set the prescalar for Timer A and Timer B, and adjust the desired Timer Frequency*/
 															/*In case in concatenation PreScalar[1] is ignored*/
 	
 
