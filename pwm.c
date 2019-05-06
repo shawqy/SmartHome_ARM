@@ -223,7 +223,34 @@ void TIMER_init(const PWM_TimerConfigStruct * pwm_structPtr)
 		/*Renable Timer A / Timer B*/
 		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_CONTROL_OFFSET)))|=(1<<0)|(1<<8);
 
-
-
 }
 
+
+void Timer_PWMOut(uint16_t ADC_value)
+{
+
+	uint16_t Duty_Cycle,Load_value;
+	
+	
+	/*Make sure that the value is 12 bits only*/
+	ADC_value&=(0x0FFF);
+	
+	
+	/*Linearization of the ADC value with the Duty Cycle*/
+	/* 0xFFF ===> 99% */
+	/* 0x000 ===> 0%  */
+	
+	Duty_Cycle=(11/455) * ADC_value;
+	
+	
+	/*Adjust the proper Load value to the corrsoponding Duty Cycle*/
+	Load_value=((488)/(1-(Duty_Cycle/100))); /*488 is the Match Adjusted Value from the init function*/
+	
+	
+	
+	
+	/*Adjust only the Interval Load Register*/
+(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_INTERVAL_LOAD_OFFSET)))=Load_value ;
+	
+	
+}
