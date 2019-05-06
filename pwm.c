@@ -86,7 +86,6 @@ void TIMER_init(const PWM_TimerConfigStruct * pwm_structPtr)
 			SYSCTL_RCGCGPIO_R |=(1<<Port_number);
 	
 
-	
 		/*Enable clock for the timer module*/
 	
 		SET_BIT(SYSCTL_RCGCTIMER_R,pwm_structPtr->PWM_TN);
@@ -96,8 +95,58 @@ void TIMER_init(const PWM_TimerConfigStruct * pwm_structPtr)
 
 	
 	
+	if(pwm_structPtr->PWM_TA)
+	{
+	
+		/*Configure the direction to be output pin*/
+		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_DIRECTION_R_OFFSET)))|=(1<<Timer_PinNumber[0]);
+
+				
+		/*Configure the digital enable to be output pin*/
+		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_DEN_R_OFFSET)))|=(1<<Timer_PinNumber[0]);
+		
+		
+		/*Configure the AFSEL*/
+		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_AFSEL_R_OFFSET)))|=(1<<Timer_PinNumber[0]);
+
+		
+		/*Configure the PCTCL*/
+		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_PCTL_R_OFFSET)))|=(7<<(Timer_PinNumber[0]*4));
+		
+	
+	}
+	
+	
+	
+	if(pwm_structPtr->PWM_TB)
+	{
+	
+		/*Configure the direction to be output pin*/
+		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_DIRECTION_R_OFFSET)))|=(1<<Timer_PinNumber[1]);
+
+				
+		/*Configure the digital enable to be output pin*/
+		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_DEN_R_OFFSET)))|=(1<<Timer_PinNumber[1]);
+		
+		
+		/*Configure the AFSEL*/
+		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_AFSEL_R_OFFSET)))|=(1<<Timer_PinNumber[1]);
+
+		
+		/*Configure the PCTCL*/
+		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_PCTL_R_OFFSET)))|=(7<<(Timer_PinNumber[1]*4));
+		
+	
+	
+	}
+	
+	
+	
+
+	
+	
 	/*Disable Timer A and Timer B*/
-	(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_CONTROL_OFFSET)))&=~(1<<0)&~(1<<8);
+	(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_CONTROL_OFFSET)))&=~(1<<0);
 	
 	
 	
@@ -112,35 +161,35 @@ void TIMER_init(const PWM_TimerConfigStruct * pwm_structPtr)
 	
 	if(pwm_structPtr->PWM_TA && (pwm_structPtr->PWM_TM == PWM) )
 	{
-	
-		/*Configure the direction to be output pin*/
-		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_DIRECTION_R_OFFSET)))|=(1<<Timer_PinNumber[0]);
-
-				
-		/*Configure the AFSEL*/
-		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_AFSEL_R_OFFSET)))|=(1<<Timer_PinNumber[0]);
-
-		
-		/*Configure the PCTCL*/
-		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_PCTL_R_OFFSET)))|=(7<<Timer_PinNumber[0]);
-		
-		
-		
 		/*Select the PWM Mode for Timer A*/
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_MODE_OFFSET)))|=(1<<3)|(1<<0);
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_MODE_OFFSET)))|=(1<<3)|(2<<0);
 	
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_MODE_OFFSET)))&=~(1<<2)|(1<<1);
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_MODE_OFFSET)))&=~(1<<2);
+	
+	
+	  /*Inverted/NonInverted*/
+	  (*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_CONTROL_OFFSET)))|=(pwm_structPtr->PWM_TI[0]<<6);
+		
+		
+		
+	
+		/*Timer A Prescalar*/
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_PRESCALAR_OFFSET )))=pwm_structPtr->PWM_PreScalar[0];
+		
+	
 	
 	
 	
 	/*Adjust The Duty Cycle*/
-	/*Initial 99%*/
 	
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_INTERVAL_LOAD_OFFSET)))=0xBEA0; /*48800*/
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_INTERVAL_LOAD_OFFSET)))=0xFFF; /*Max Load Value*/
 	
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_MATCH_OFFSET)))= 0x1E8; /*488*/
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_MATCH_OFFSET)))= 0xFFA; /*Random Value */
 	
 		
+		
+		/*Renable Timer A */
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_CONTROL_OFFSET)))|=(1<<0);
 		
 		
 	}
@@ -149,108 +198,76 @@ void TIMER_init(const PWM_TimerConfigStruct * pwm_structPtr)
 	if(pwm_structPtr->PWM_TB && (pwm_structPtr->PWM_TM == PWM))
 	{
 
-		
-		/*Configure the direction to be output pin*/
-		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_DIRECTION_R_OFFSET)))|=(1<<Timer_PinNumber[1]);
-
-				
-		/*Configure the AFSEL*/
-		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_AFSEL_R_OFFSET)))|=(1<<Timer_PinNumber[1]);
-
-		
-		/*Configure the PCTCL*/
-		(*((volatile uint32_t *)(Port_BaseAdd+GPIO_PORT_PCTL_R_OFFSET)))|=(7<<Timer_PinNumber[1]);
-		
-		
-	
 		/*Select the PWM Mode for Timer B*/	
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_MODE_OFFSET)))|=(1<<3)|(1<<0);
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_MODE_OFFSET)))|=(1<<3)|(2<<0);
 	
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_MODE_OFFSET)))&=~(1<<2)|(1<<1);
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_MODE_OFFSET)))&=~(1<<2);
+	
+		
+		
+		/*Inverted/NonInverted*/
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_CONTROL_OFFSET)))|=(pwm_structPtr->PWM_TI[1]<<14);
+	
+		
+		
+			/*Timer B Prescalar*/
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_PRESCALAR_OFFSET )))=pwm_structPtr->PWM_PreScalar[1];
+	
 	
 	
 	/*Adjust The Duty Cycle*/
-	/*Initial 66%*/
 	
-	(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_INTERVAL_LOAD_OFFSET)))=0xBEA0; /*48800*/
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_INTERVAL_LOAD_OFFSET)))=0xFFF; /*Max Load Value*/
 	
-	
-	(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_MATCH_OFFSET)))= 0x1E8; /*488*/
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_MATCH_OFFSET)))= 0xFFA; 	/*Random Value*/
 	
 	
-	
-	}
-	
-	
-	
-	
-	
-	
-	
-/*Inverted/NonInverted*/
-(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_MODE_OFFSET)))|=(pwm_structPtr->PWM_TI[0]<<6)|(pwm_structPtr->PWM_TI[1]<<14);
-	
-
-	
-	
-	
-/*Adjust the PreScalar*/
-	
-	if(pwm_structPtr->PWM_TC == CONCATENATE)
-	{
-	
-		/*Set only one timer and it will impacts on the second*/ 
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_PRESCALAR_OFFSET )))=pwm_structPtr->PWM_PreScalar[0];
+		/*Renable Timer B */
+		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_CONTROL_OFFSET)))|=(1<<8);
 
 	
 	}
-	else
-	{
-	
-		/*Timer A Prescalar*/
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_PRESCALAR_OFFSET )))=pwm_structPtr->PWM_PreScalar[0];
-		
-		
-		/*Timer B Prescalar*/
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_PRESCALAR_OFFSET )))=pwm_structPtr->PWM_PreScalar[1];
-	
-	}
 	
 	
-	
-	
-	
-		/*Renable Timer A / Timer B*/
-		(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_CONTROL_OFFSET)))|=(1<<0)|(1<<8);
+
 
 }
+
+
 
 
 void Timer_PWMOut(uint16_t ADC_value)
 {
 
-	uint16_t Duty_Cycle,Load_value;
+	uint16_t Duty_Cycle,Match_value;
 	
 	
 	/*Make sure that the value is 12 bits only*/
-	ADC_value&=(0x0FFF);
+	ADC_value&=(0xFFFF);
 	
 	
 	/*Linearization of the ADC value with the Duty Cycle*/
 	/* 0xFFF ===> 99% */
 	/* 0x000 ===> 0%  */
 	
-	Duty_Cycle=(11/455) * ADC_value;
-	
+	Duty_Cycle=(1000.0/4095.0)* ADC_value;
 	
 	/*Adjust the proper Load value to the corrsoponding Duty Cycle*/
-	Load_value=((488)/(1-(Duty_Cycle/100))); /*488 is the Match Adjusted Value from the init function*/
 	
-	
+	Match_value=(Duty_Cycle/1000.0) * 0xFFFF;
 	
 	
 	/*Adjust only the Interval Load Register*/
-(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_B_INTERVAL_LOAD_OFFSET)))=Load_value ;
+(*((volatile uint32_t *)(Timer_BaseAdd+TIMER_GPTM_TIMER_A_MATCH_OFFSET)))=Match_value;
 	
 	
 }
+
+
+
+
+
+
+
+
+
