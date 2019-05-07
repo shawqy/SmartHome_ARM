@@ -19,10 +19,12 @@ static uint32_t USART_baseAddresses[] =
 };
 	
 /*These pointers to function will used to call the interrupt user defined function inside the ISR*/
-static void(*UART0_transCallBackPtr)(void)=NULL_PTR;
-static void(*UART0_receiveCallBackPtr)(void)=NULL_PTR;
-static void(*UART1_transCallBackPtr)(void)=NULL_PTR;
-static void(*UART1_receiveCallBackPtr)(void)=NULL_PTR;
+static  void(*UART0_transCallBackPtr)(void)=NULL_PTR;
+static  void(*UART0_receiveCallBackPtr)(void)=NULL_PTR;
+static  void(*UART1_transCallBackPtr)(void)=NULL_PTR;
+static  void(*UART1_receiveCallBackPtr)(void)=NULL_PTR;
+static  void(*UART2_transCallBackPtr)(void)=NULL_PTR;
+static  void(*UART2_receiveCallBackPtr)(void)=NULL_PTR;
 
 
 
@@ -97,6 +99,37 @@ void UART1_Handler()
 }
 
 
+
+void UART2_Handler()
+{
+		
+	
+	 /*Check if the interrupt signaled due to transmission*/
+	 if(BIT_IS_SET(UART2_MIS_R,5))
+		{
+			/*Execute the trans call back function*/
+				UART2_transCallBackPtr();
+			
+			/*Clear The Trans flag*/
+			  SET_BIT(UART2_ICR_R,BIT_5);
+		}
+		
+		
+		
+	 /*Check if the interrupt signaled due to reception*/
+	 if(BIT_IS_SET(UART2_MIS_R,4))
+		{
+			/*Execute the trans call back function*/
+				UART2_receiveCallBackPtr();
+
+			/*Clear The Recep flag*/
+			  SET_BIT(UART2_ICR_R,BIT_4);
+		
+		}
+
+
+
+}
 
 
 /*********************************************************************/
@@ -328,17 +361,23 @@ SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R0;
 
 void UART_setTransmitCallBack(void(*callBack_ptr)(void),UART_Number UN)
 {
-
-if(UN)	UART1_transCallBackPtr=callBack_ptr;
-else		UART0_transCallBackPtr=callBack_ptr;
-
+	switch(UN)
+	{
+		case 0 : UART0_transCallBackPtr=callBack_ptr; break;
+		case 1 : UART1_transCallBackPtr=callBack_ptr; break;
+		case 2 : UART2_transCallBackPtr=callBack_ptr; break;
+		default: UART0_transCallBackPtr=callBack_ptr; break;	
+	}
 }
 
 
 void UART_setReceiveCallBack(void(*callBack_ptr)(void),UART_Number UN)
 {
-	
-if(UN)	UART1_receiveCallBackPtr=callBack_ptr;
-else    UART0_receiveCallBackPtr=callBack_ptr;
-
+	switch(UN)
+	{
+		case 0 : UART0_receiveCallBackPtr=callBack_ptr; break;
+		case 1 : UART1_receiveCallBackPtr=callBack_ptr; break;
+		case 2 : UART2_receiveCallBackPtr=callBack_ptr; break;
+		default: UART0_receiveCallBackPtr=callBack_ptr; break;
+	}
 }
