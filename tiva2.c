@@ -33,6 +33,7 @@ int main()
 	 /*Local Variables*/
 	uint8_t temperature_read_first_byte,temperature_read_second_byte,onPress_Flag=0;
 	 uint16_t temp_result ;
+	//variable to get the 16bit vale of the pottenchiometer
 	uint16_t potenchio_value;
 	
 	
