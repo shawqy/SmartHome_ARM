@@ -33,6 +33,7 @@ int main()
 	 /*Local Variables*/
 	uint8_t temperature_read_first_byte,temperature_read_second_byte,onPress_Flag=0;
 	 uint16_t temp_result ;
+	uint16_t potenchio_value;
 	
 	
 	
@@ -172,6 +173,12 @@ UART_setReceiveCallBack(Tiva2_UART2callBack,UART_2);
 		
 		/*Read Potentiometer via ADC*/
 		/*Send via uart0*/
+		
+		potenchio_value = ADC_readChannel(ADC_0); //getting the digital potenchiometter value
+		 
+		UART_sendByte(UART_0,potenchio_value & 0x0FF); //getting the first 2 bytes of the 12 bit number and sending them to uart0
+		UART_sendByte(UART_0,(potenchio_value>>2) & 0x0F);//getting the rest of the bits and sending them
+		//**************************************//
 		
 		
 		
