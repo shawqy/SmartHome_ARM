@@ -1,6 +1,6 @@
 
 
-#if 0
+
 #include "adc.h"
 #include "stepper.h"
 #include "uart.h"
@@ -202,4 +202,3 @@ void Tiva2_UART2callBack()
 	g_callBackUART2++;
 }
 
-#endif
