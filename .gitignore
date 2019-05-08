@@ -1,1 +1,16 @@
 .vscode/
+*.crf
+*.d
+*.o
+*.axf
+*.htm
+*.lnp
+*.map
+*.uvopt
+SmartHome_ARM_Target 1.dep
+SmartHome_ARM_uvopt.bak
+startup_tm4c123.lst
+SmartHome_ARM.uvgui.Samir Mossad
+SmartHome_ARM.uvgui_Samir Mossad.bak
+*.tmp
+SmartHome_ARM_uvproj.bak
