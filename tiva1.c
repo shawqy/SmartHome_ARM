@@ -40,13 +40,40 @@ int main()
 	
 	
 	     /*UART0 Configure Receiving with interrupt (PWM LED) */ 
-		UART_ConfigureStruct UART0_Config;
+		UART_ConfigureStruct UART0_Config=
+			{
+		UART_0,
+		BIT_8_, /*8-BITS WordLength*/
+		PARITY_DISABLED, 
+		INTERRUPT,
+		ODD_PARITY, /*No effect*/
+		BIT_1_, /*1 Stop Bit*/
+		FIFO_ENABLED	
+			};
 	
 			 /*UART1 Configure Receiving with interrupt (STEPPER MOTOR) */
-		UART_ConfigureStruct UART1_Config;
+		UART_ConfigureStruct UART1_Config=
+			{
+		UART_1,
+		BIT_8_, /*8-BITS WordLength*/
+		PARITY_DISABLED, 
+		INTERRUPT,
+		ODD_PARITY, /*No effect*/
+		BIT_1_, /*1 Stop Bit*/
+		FIFO_ENABLED	
+			}; 
 
-		/*UART2 Configure (No Interrupt) (INTERNAL TEMP SENSOR) */
-		UART_ConfigureStruct UART2_Config;
+		/*UART2 Configure (No Interrupt) (INTERNAL TEMP SENESOR) */
+		UART_ConfigureStruct UART2_Config=
+			{	
+		UART_2,
+		BIT_8_, /*8-BITS WordLength*/
+		PARITY_DISABLED, 
+		NO_INTERRUPT,
+		ODD_PARITY, /*No effect*/
+		BIT_1_, /*1 Stop Bit*/
+		FIFO_ENABLED		
+			}; 
 	
 	
 	
@@ -157,6 +184,14 @@ TIMER_init(&LED_PWMConfig);
 /*initialize STEPPER*/
 STEPPER_init(&STEPPER_Config);
 
+/*Initialize UART0*/
+UART_init(&UART0_Config);
+
+/*Initialize UART1*/
+UART_init(&UART1_Config);
+
+/*Initialize UART2*/
+UART_init(&UART2_Config);
 
 /*Set UART0 CAll Back*/
 UART_setReceiveCallBack(Tiva1_UART0callBack,UART_0);
@@ -217,5 +252,7 @@ void Tiva1_UART1callBack(void)
 {
 	g_callBackUART1++;
 }
+
+
 
 #endif
