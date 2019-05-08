@@ -231,7 +231,8 @@ UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 		
 		/*Read Internal Temp Sensor via ADC*/
 		/*Send via UART2*/
-		
+		uint16_t temp= ADC_readChannel(0);
+		UART_sendByte(2,temp);
 			
 	}
 	
