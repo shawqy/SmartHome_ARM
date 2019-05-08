@@ -8,7 +8,7 @@
 #include "PORT.h"
 #include "DIO.h"
 #include "pwm.h"
-
+#include "systick.h"
 
 
 /* Tiva2 */
@@ -118,9 +118,8 @@ int main()
 			 /*2 Push buttons Configure*/
 	
 	
-	
-			 /*LCD Configure*/
-	
+/*LCD Configure*/
+LCD_init();	
 	
 	
 	
@@ -149,8 +148,7 @@ UART_init(&UART2_Config);
 /*Set UART2 CAll Back*/
 UART_setReceiveCallBack(Tiva2_UART2callBack,UART_2);
 	
-	
-	
+
 	
 	
 	while(1)
