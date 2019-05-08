@@ -1,4 +1,5 @@
 
+
 #if 0
 #include "adc.h"
 #include "stepper.h"
@@ -31,22 +32,46 @@ int main()
 	
 		/*Tiva LaunchPad 2 Configure*/
 	
-	     /*UART0 Configure*/
-	UART_ConfigureStruct UART0_Config; /*Set the proper Settings*/
+	 /*UART0 Configure (No Interrupt) (POTENTIOMETER) */
+		UART_ConfigureStruct UART0_Config=
+			{
+		UART_0,
+		BIT_8_, /*8-BITS WordLength*/
+		PARITY_DISABLED, 
+		NO_INTERRUPT,
+		ODD_PARITY, /*No effect*/
+		BIT_1_, /*1 Stop Bit*/
+		FIFO_ENABLED	
+			};
+	
+			 /*UART1 Configure (No Interrupt) (2-PUSH BUTTONS) */
+		UART_ConfigureStruct UART1_Config=
+			{
+		UART_1,
+		BIT_8_, /*8-BITS WordLength*/
+		PARITY_DISABLED, 
+		NO_INTERRUPT,
+		ODD_PARITY, /*No effect*/
+		BIT_1_, /*1 Stop Bit*/
+		FIFO_ENABLED	
+			}; 
+
+		/*UART2 Configure Receiving with interrupt (LCD)*/
+		UART_ConfigureStruct UART2_Config=
+			{	
+		UART_2,
+		BIT_8_, /*8-BITS WordLength*/
+		PARITY_DISABLED, 
+		INTERRUPT,
+		ODD_PARITY, /*No effect*/
+		BIT_1_, /*1 Stop Bit*/
+		FIFO_ENABLED		
+			}; 
 	
 	
-			 /*UART1 Configure*/
-	UART_ConfigureStruct UART1_Config;/*Set the proper Settings*/
 	
 	
-			/*UART2 Configure*/
-	UART_ConfigureStruct UART2_Config;/*Set the proper Settings*/
-	
-	
-	
-	
-	
-	
+
 			 /*ADC Configure Normal*/     
 	
 	/*Configure the Samples*/
@@ -112,6 +137,15 @@ int main()
 ADC_init(&ADC0_Config);	
 	
 
+/*Initialize UART0*/
+UART_init(&UART0_Config);
+
+/*Initialize UART1*/
+UART_init(&UART1_Config);
+
+/*Initialize UART2*/
+UART_init(&UART2_Config);
+
 /*Set UART2 CAll Back*/
 UART_setReceiveCallBack(Tiva2_UART2callBack,UART_2);
 	
@@ -162,4 +196,4 @@ void Tiva2_UART2callBack()
 	g_callBackUART2++;
 }
 
-	#endif
+#endif
