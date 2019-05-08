@@ -196,8 +196,9 @@ UART_setReceiveCallBack(Tiva1_UART0callBack,UART_0);
 UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 	
 	
-	
-	
+	uint8_t first_byte;
+	uint8_t second_byte;
+	uint16_t resultPWM;
 	while(1)
 	{
 	
@@ -208,7 +209,15 @@ UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 		/*Check on the interrupt Value of UART0*/
 		/*Receive via UART0*/
 		/*PWM the led with the receive value*/	
-		
+			if (g_callBackUART0)
+		{
+			first_byte = UART_receiveByte(UART_0)
+			g_callBackUART0 = 0;
+			second_byte = UART_receiveByte(UART_0)
+			g_callBackUART0 = 0;
+			resultPWM = (second_byte << 8 ) | (first_byte <<0 );
+			Timer_PWMOut(resultPWM);
+		}
 		
 		
 		/*Check on the interrupt Value of UART1*/
