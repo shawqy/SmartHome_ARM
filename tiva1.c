@@ -195,7 +195,8 @@ UART_setReceiveCallBack(Tiva1_UART0callBack,UART_0);
 /*Set UART1 CAll Back*/
 UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 	
-	
+	uint8_t temp_upper;
+	uint8_t temp_lower;
 	uint8_t first_byte;
 	uint8_t second_byte;
 	uint16_t resultPWM;
@@ -240,8 +241,10 @@ UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 		
 		/*Read Internal Temp Sensor via ADC*/
 		/*Send via UART2*/
-		uint16_t temp= ADC_readChannel(0);
-		UART_sendByte(2,temp);
+		temp_lower= (uint8_t)(ADC_readChannel(ADC_0)& 0x00FF);
+		temp_upper=(uint8_t)(ADC_readChannel(ADC_0)& 0xFF00);
+		UART_sendByte(UART_2,temp_lower);
+		UART_sendByte(UART_2,temp_upper);
 			
 	}
 	

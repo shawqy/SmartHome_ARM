@@ -455,6 +455,16 @@
               <FileType>1</FileType>
               <FilePath>.\pwm.c</FilePath>
             </File>
+            <File>
+              <FileName>tiva1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\tiva1.c</FilePath>
+            </File>
+            <File>
+              <FileName>tiva2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\tiva2.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
