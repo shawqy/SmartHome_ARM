@@ -117,10 +117,7 @@ int main()
 
 					
 	
-/*LCD Configure*/
-LCD_init();	
-	
-	
+
 	
 	
 
@@ -137,6 +134,11 @@ Port_Init(PORT_F);
 Port_SetPinDirection(PORT_F,0x11,PORT_PIN_IN);
 Port_SetPinPullUp(PORT_F,0x11,0x01);
 	
+
+/*LCD Configure*/
+LCD_init();	
+	
+		
 	
 /*Initialize ADC0*/	
 ADC_init(&ADC0_Config);	
