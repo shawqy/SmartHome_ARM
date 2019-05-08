@@ -115,8 +115,7 @@ int main()
 	
 	
 
-			 /*2 Push buttons Configure*/
-	
+					
 	
 	
 			 /*LCD Configure*/
@@ -131,6 +130,13 @@ int main()
 	
 	/*Enable Global Interrupts*/
 	 __enable_irq();
+	
+
+
+/*2 Push buttons Configure (PF0,PF4) */
+Port_Init(PORT_F);		
+Port_SetPinDirection(PORT_F,0x11,PORT_PIN_IN);
+Port_SetPinPullUp(PORT_F,0x11,0x01);
 	
 	
 /*Initialize ADC0*/	
