@@ -32,6 +32,12 @@ void SystemInit(){}
 int main()
 {
 
+	
+	/*Local Variables used in the Super Loop*/
+	uint8_t temp_upper,temp_lower,first_byte,second_byte;
+	uint16_t resultPWM;
+	
+	
 		/*Tiva LaunchPad 1 Configure*/
 	
 	
@@ -195,11 +201,7 @@ UART_setReceiveCallBack(Tiva1_UART0callBack,UART_0);
 /*Set UART1 CAll Back*/
 UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 	
-	uint8_t temp_upper;
-	uint8_t temp_lower;
-	uint8_t first_byte;
-	uint8_t second_byte;
-	uint16_t resultPWM;
+	
 	while(1)
 	{
 	
@@ -212,9 +214,9 @@ UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 		/*PWM the led with the receive value*/	
 			if (g_callBackUART0)
 		{
-			first_byte = UART_receiveByte(UART_0)
+			first_byte = UART_receiveByte(UART_0);
 			g_callBackUART0 = 0;
-			second_byte = UART_receiveByte(UART_0)
+			second_byte = UART_receiveByte(UART_0);
 			g_callBackUART0 = 0;
 			resultPWM = (second_byte << 8 ) | (first_byte <<0 );
 			Timer_PWMOut(resultPWM);
@@ -242,7 +244,7 @@ UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 		/*Read Internal Temp Sensor via ADC*/
 		/*Send via UART2*/
 		temp_lower= (uint8_t)(ADC_readChannel(ADC_0)& 0x00FF);
-		temp_upper=(uint8_t)(ADC_readChannel(ADC_0)& 0xFF00);
+		temp_upper=(uint8_t)(ADC_readChannel(ADC_0)>>2);
 		UART_sendByte(UART_2,temp_lower);
 		UART_sendByte(UART_2,temp_upper);
 			
@@ -274,6 +276,6 @@ void Tiva1_UART1callBack(void)
 	g_callBackUART1++;
 }
 
-
-
 #endif
+
+
