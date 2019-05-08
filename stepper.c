@@ -69,17 +69,16 @@ void STEPPER_clockWise(const uint8_t angle)
     //  Get the number of iterations needed to get the specified angle
     uint16_t noOfIterationsCeiled = (angle / (4 * StepAngle)) + 1;
 
-    uint16_t iterationCount = 0;
     uint16_t j;
-    while (iterationCount < noOfIterationsCeiled)
+    while (noOfIterationsCeiled--)
     {
         for (j = 0; j < 4; j++)
         {
             (*((volatile uint32_t *)((Port_baseAddresse + GPIO_PORT_DATA_R_OFFSET)))) = (steps[nextStep++ & 3] << Pins[0]);
+					//delay between steps; kind of tolerance for coils energizing
+						SYSTICK_delay(required_delay);
         }
-				//delay between steps; kind of tolerance for coils energizing
-				SYSTICK_delay(required_delay);
-        iterationCount++;
+				
     }
 }
 
@@ -92,16 +91,16 @@ void STEPPER_counterClockWise(const uint8_t angle)
     //  Get the number of iterations needed to get the specified angle
     uint16_t noOfIterationsCeiled = (angle / (4 * StepAngle)) + 1;
 
-    uint16_t iterationCount = 0;
     uint16_t j;
-    while (iterationCount < noOfIterationsCeiled)
+    while (noOfIterationsCeiled--)
     {
         for (j = 0; j < 4; j++)
         {
             (*((volatile uint32_t *)((Port_baseAddresse + GPIO_PORT_DATA_R_OFFSET)))) = (steps[nextStep-- & 3] << Pins[0]);
+						//same delay 
+						SYSTICK_delay(required_delay);
 				}
-				//same delay mtb2ash zboon
-				SYSTICK_delay(required_delay);
-        iterationCount++;
+				
+       
     }
 }

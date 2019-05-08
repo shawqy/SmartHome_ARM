@@ -119,7 +119,7 @@
 
 /*  Stepper motor */
 
-#define StepAngle 1.7 //this value depends on the motor it self
+#define StepAngle 0.175 //this value depends on the motor it self
 
 typedef enum
 {
