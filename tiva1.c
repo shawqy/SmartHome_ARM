@@ -51,6 +51,10 @@ int main()
 
 	
 	
+	
+	
+	
+	
 			  /*ADC Configure Normal*/     
 	
 	/*Configure the Samples*/
@@ -93,10 +97,36 @@ int main()
 	
 	
 	
+	/*PWM Led Configure*/
+			
+	/*NOTE: Connect the LED to PIN PB6*/
 	
-			 
+	/*Adjust the Prescalar*/
+static	uint32_t PWM_PreScalar[2]={0x1,0x0};
+	/*Determin the Output effect*/
+static	PWM_TimerInversion PWM_TimerInversion[2]={INVERTED,INVERTED};
+	
+	PWM_TimerConfigStruct LED_PWMConfig=
+	{
+	TIMER_0, /*We will use Timer Block0*/
+	PWM, /*PWM MODE*/
+	PWM_TimerInversion,
+  NO_CONCATENATION,/*16 Bit-Timer Mode*/
+	TIMER_A_ENABLED, 
+	TIMER_B_DISABLED,
+	PWM_PreScalar
+	};
+	
+	
+	
+		 
 			 /*Stepper Configure*/
 		STEPPER_ConfigStructure STEPPER_Config;/*Set the proper Settings*/
+	
+	
+	
+	
+	
 	
 	
 
@@ -113,8 +143,12 @@ int main()
 /*Initialize ADC0*/	
 ADC_init(&ADC0_Config);	
 		
+/*Initialize PWM LED*/
+TIMER_init(&LED_PWMConfig);
 
-	
+
+
+
 /*Set UART0 CAll Back*/
 UART_setReceiveCallBack(Tiva1_UART0callBack,UART_0);
 /*Set UART1 CAll Back*/
@@ -182,8 +216,7 @@ void Tiva1_UART1callBack(void)
 	g_callBackUART1++;
 }
 
+
+
+
 #endif
-
-
-
-
