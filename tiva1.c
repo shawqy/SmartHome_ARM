@@ -49,20 +49,71 @@ int main()
 		UART_ConfigureStruct UART2_Config; /*Set the proper Settings*/
 
 
-			 /*ADC Configure Temp Sensor*/
-		ADC_ConfigureStruct ADC0_Config;/*Set the proper Settings*/
+	
+	
+			  /*ADC Configure Normal*/     
+	
+	/*Configure the Samples*/
+	  /*We will only use Sample0 in Sequencer0*/
+	static ADC_Sample Samples[2]={
+		
+		/*Sample[0]*/
+	{
+		0x00, /*Sample Number*/
+		0x00,	 /*Analog Input Number (PE3) */
+		0x01, /*The Last Sample*/
+		SEQUENCER_0,
+		TEMP_SENSOR, /*Read from the internal temp sensor*/
+		INTERRUPT_DISABLED
+	},
+	
+		/*Sample[1]*/
+	{
+	
+		-1, /*Terminate The loop*/
+   	0x02,	 
+		0x01, 
+		SEQUENCER_0,
+		NORMAL_SELECT,
+		INTERRUPT_DISABLED
+	} 
+};
+	
 
+	/*Set the proper Settings*/
+	ADC_ConfigureStruct ADC0_Config=
+	{
+		Samples,
+		ADC_0,
+		0x00, /*Disable The 4 Sequencers Module Interrupts*/
+	  0x01, /*Active Sequencer 0*/
+		0x10, /*Enable The GPIO Clock For PORTE*/
+	
+	};
+	
+	
+	
+	
 			 
 			 /*Stepper Configure*/
 		STEPPER_ConfigStructure STEPPER_Config;/*Set the proper Settings*/
 	
 	
+
+
+
+	/*Initializations*/	
 	
 
 /*Enable Global Interrupts*/
 	 __enable_irq();
 		
-	
+
+
+/*Initialize ADC0*/	
+ADC_init(&ADC0_Config);	
+		
+
 	
 /*Set UART0 CAll Back*/
 UART_setReceiveCallBack(Tiva1_UART0callBack,UART_0);
@@ -131,9 +182,8 @@ void Tiva1_UART1callBack(void)
 	g_callBackUART1++;
 }
 
-
-
-
-
-
 #endif
+
+
+
+

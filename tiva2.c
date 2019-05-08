@@ -1,5 +1,5 @@
 
-#if 0
+
 #include "adc.h"
 #include "stepper.h"
 #include "uart.h"
@@ -51,9 +51,9 @@ int main()
 	
 	/*Configure the Samples*/
 	  /*We will only use Sample0 in Sequencer0*/
-	ADC_Sample Samples[2];
-	
-	Samples[0]=
+	static ADC_Sample Samples[2]={
+		
+		/*Samples[0]*/
 	{
 		0x00, /*Sample Number*/
 		0x00,	 /*Analog Input Number (PE3) */
@@ -61,8 +61,8 @@ int main()
 		SEQUENCER_0,
 		NORMAL_SELECT,
 		INTERRUPT_DISABLED
-	};
-	Samples[1]=
+	},
+	 /*Samples[1]*/
 	{
 	
 		-1, /*Terminate The loop*/
@@ -71,7 +71,8 @@ int main()
 		SEQUENCER_0,
 		NORMAL_SELECT,
 		INTERRUPT_DISABLED
-	};
+	}
+};
 	
 	
 	/*Set the proper Settings*/
@@ -161,6 +162,4 @@ void Tiva2_UART2callBack()
 	g_callBackUART2++;
 }
 
-
-#endif
 	
