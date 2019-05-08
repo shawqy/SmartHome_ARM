@@ -26,12 +26,8 @@ void Tiva1_UART0callBack(void);
 void Tiva1_UART1callBack(void);
 
 
-
-
-
 void SystemInit(){}
-	
-	
+		
 
 int main()
 {
@@ -218,6 +214,18 @@ UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 		/*Check on the interrupt Value of UART1*/
 		/*Receive via UART1*/
 		/*Rotate the motor with the received direction*/
+		if (g_callBackUART1)
+		{
+			if ( UART_receiveByte(UART_1) == 'L')
+			{
+				STEPPER_counterClockWise(45);
+			}
+			else if ( UART_receiveByte(UART_1) == 'R')
+			{
+				STEPPER_clockWise(45);
+			}
+			g_callBackUART1 = 0;
+		}
 		
 		
 		
