@@ -39,16 +39,14 @@ int main()
 		/*Tiva LaunchPad 1 Configure*/
 	
 	
-	     /*UART0 Configure*/
-		UART_ConfigureStruct UART0_Config; /*Set the proper Settings*/
+	     /*UART0 Configure Receiving with interrupt (PWM LED) */ 
+		UART_ConfigureStruct UART0_Config;
+	
+			 /*UART1 Configure Receiving with interrupt (STEPPER MOTOR) */
+		UART_ConfigureStruct UART1_Config;
 
-			 /*UART1 Configure*/
-		UART_ConfigureStruct UART1_Config; /*Set the proper Settings*/
-		
-			/*UART2 Configure*/
-		UART_ConfigureStruct UART2_Config; /*Set the proper Settings*/
-
-
+		/*UART2 Configure (No Interrupt) (INTERNAL TEMP SENSOR) */
+		UART_ConfigureStruct UART2_Config;
 	
 	
 	
@@ -97,6 +95,8 @@ int main()
 	
 	
 	
+	
+	
 	/*PWM Led Configure*/
 			
 	/*NOTE: Connect the LED to PIN PB6*/
@@ -120,9 +120,15 @@ static	PWM_TimerInversion PWM_TimerInversion[2]={INVERTED,INVERTED};
 	
 	
 		 
-			 /*Stepper Configure*/
-		STEPPER_ConfigStructure STEPPER_Config;/*Set the proper Settings*/
 	
+			 /*Stepper Configure*/
+	/*Set the proper Settings*/
+STEPPER_ConfigStructure STEPPER_Config=
+	{
+  0x02, /*PORT C*/
+	GPIO_PORT_C_APB_BASE_ADDRESSE,
+	{PIN_0,PIN_1,PIN_2,PIN_3}	/*PC0,PC1,PC2,PC3*/
+	};
 	
 	
 	
@@ -139,6 +145,7 @@ static	PWM_TimerInversion PWM_TimerInversion[2]={INVERTED,INVERTED};
 	 __enable_irq();
 		
 
+	
 
 /*Initialize ADC0*/	
 ADC_init(&ADC0_Config);	
@@ -147,10 +154,13 @@ ADC_init(&ADC0_Config);
 TIMER_init(&LED_PWMConfig);
 
 
+/*initialize STEPPER*/
+STEPPER_init(&STEPPER_Config);
 
 
 /*Set UART0 CAll Back*/
 UART_setReceiveCallBack(Tiva1_UART0callBack,UART_0);
+
 /*Set UART1 CAll Back*/
 UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 	
@@ -160,8 +170,6 @@ UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 	while(1)
 	{
 	
-		
-		
 		/*Tiva LaunchPad 1 code*/
 
 
@@ -181,16 +189,10 @@ UART_setReceiveCallBack(Tiva1_UART1callBack,UART_1);
 		/*Read Internal Temp Sensor via ADC*/
 		/*Send via UART2*/
 		
-		
-		
+			
 	}
 	
 
-	
-	
-	
-	
-	
 	
 	return 0;
 }	
@@ -215,8 +217,5 @@ void Tiva1_UART1callBack(void)
 {
 	g_callBackUART1++;
 }
-
-
-
 
 #endif
