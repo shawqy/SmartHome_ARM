@@ -95,7 +95,7 @@ int main()
 		0x01, /*The Last Sample*/
 		SEQUENCER_0,
 		TEMP_SENSOR, /*Read from the internal temp sensor*/
-		INTERRUPT_DISABLED
+		ADC_INTERRUPT_DISABLED
 	},
 	
 		/*Sample[1]*/
@@ -106,7 +106,7 @@ int main()
 		0x01, 
 		SEQUENCER_0,
 		NORMAL_SELECT,
-		INTERRUPT_DISABLED
+		ADC_INTERRUPT_DISABLED
 	} 
 };
 	
@@ -277,5 +277,4 @@ void Tiva1_UART1callBack(void)
 }
 
 #endif
-
 
