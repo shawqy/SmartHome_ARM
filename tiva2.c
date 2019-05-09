@@ -187,6 +187,10 @@ UART_setReceiveCallBack(Tiva2_UART2callBack,UART_2);
 		/*Read Button2 and Check if High*/
 		/*Send via uart1*/
 		
+		if (uint8 DIO_ReadPort(PORT_F,0x10) == 0x10)
+		{
+		UART_sendByte(UART_1,'F');		
+		}
 		
 		
 		/*Check on the interrupt Value of UART2*/
