@@ -32,9 +32,7 @@ int main()
 	
 	 /*Local Variables*/
 	uint8_t temperature_read_first_byte,temperature_read_second_byte,onPress_Flag=0;
-	 uint16_t temp_result ;
-	//variable to get the 16bit vale of the pottenchiometer
-	uint16_t potenchio_value;
+	uint16_t temp_result,potenchio_value_new,potenchio_value_old ;
 	
 	
 	
@@ -165,7 +163,7 @@ UART_init(&UART2_Config);
 UART_setReceiveCallBack(Tiva2_UART2callBack,UART_2);
 	
 
-	
+	potenchio_value_old=ADC_readChannel(ADC_0);
 	
 	while(1)
 	{
@@ -173,12 +171,20 @@ UART_setReceiveCallBack(Tiva2_UART2callBack,UART_2);
 		/*Tiva LaunchPad 2 code*/
 		
 		/*Read Potentiometer via ADC*/
-		/*Send via uart0*/
+		potenchio_value_new = ADC_readChannel(ADC_0); //getting the digital potenchiometter value
+
 		
-		potenchio_value = ADC_readChannel(ADC_0); //getting the digital potenchiometter value
-		 
-		UART_sendByte(UART_0,potenchio_value & 0x0FF); //getting the first 2 bytes of the 12 bit number and sending them to uart0
-		UART_sendByte(UART_0,(potenchio_value>>2) & 0x0F);//getting the rest of the bits and sending them
+		/*Check if the reading has changed or not (Lower the overhead)*/
+		if(potenchio_value_new != potenchio_value_old)
+		{
+		
+			/*Send via uart0*/		
+		UART_sendByte(UART_0,(uint8_t)(potenchio_value_new & 0x0FF)); //getting the first 2 bytes of the 12 bit number and sending them to uart0
+		UART_sendByte(UART_0,(uint8_t)((potenchio_value_new>>2) & 0x0F));//getting the rest of the bits and sending them
+		
+			/*Replace the old value by the new one*/
+			 potenchio_value_old=potenchio_value_new ;
+		}
 		//**************************************//
 		
 		
