@@ -137,7 +137,7 @@ Port_SetPinPullUp(PORT_F,0x11,0x01);
 
 /*LCD Configure*/
 LCD_init();	
-	
+//LCD take PORTA & PORTB	
 		
 	
 /*Initialize ADC0*/	
@@ -182,7 +182,19 @@ UART_setReceiveCallBack(Tiva2_UART2callBack,UART_2);
 		/*Check on the interrupt Value of UART2*/
 		/*Receive Via UART2*/
 		/*Display the receit on LCD*/
-		
+
+		if(g_callBackUART2)
+		{
+			  uint8_t temperature_read_first_byte  = UART_receiveByte(UART_2);
+			  g_callBackUART2 = 0;
+			  uint8_t temperature_read_second_byte = UART_receiveByte(UART_2);
+			  g_callBackUART2 = 0;
+			 
+			  uint16_t temp_result = (temperature_read_second_byte << 8 ) | ( temperature_read_first_byte <<0 );
+
+			  LCD_sendCommand(CLEAR_DISPLAY_SCREEN);
+			  LCD_integerToString(temp_result);  
+		}
 		
 	
 	}
