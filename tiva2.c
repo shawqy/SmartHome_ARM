@@ -31,7 +31,7 @@ int main()
 	
 	
 	 /*Local Variables*/
-	uint8_t temperature_read_first_byte,temperature_read_second_byte;
+	uint8_t temperature_read_first_byte,temperature_read_second_byte,onPress_Flag=0;
 	 uint16_t temp_result ;
 	
 	
@@ -179,19 +179,30 @@ UART_setReceiveCallBack(Tiva2_UART2callBack,UART_2);
 		/*Read Button1 and Check if High*/
 		/*Send via uart1*/
 		//PF0
-		if (DIO_ReadPort(PORT_F,0x01))
+		if (DIO_ReadPort(PORT_F,0x01) && onPress_Flag==0)
 		{
 		UART_sendByte(UART_1,'L');		
+		onPress_Flag=1;
+		}
+		else
+		{
+		onPress_Flag=0;
 		}
 		
 		
 		/*Read Button2 and Check if High*/
 		/*Send via uart1*/
 		
-		if (DIO_ReadPort(PORT_F,0x10))
+		if (DIO_ReadPort(PORT_F,0x10) && onPress_Flag==0 )
 		{
 		UART_sendByte(UART_1,'R');		
+		onPress_Flag=1;
 		}
+		else
+		{
+		onPress_Flag=0;
+		}
+		
 		
 		
 		
